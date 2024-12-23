@@ -48,6 +48,11 @@ async function generateCardImages(cardList) {
   
   let cardImages = getCardImageElementBlockAndClear();
 
+  if (cardList.length == 0) {
+    logDebug(" - No card is selected. Abort");
+    return;
+  }
+
   function startNewGrid() {
     let grid = createGrid();
     cardImages.appendChild(grid);
