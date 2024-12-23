@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTG Proxy Generator with Debug Window</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>MTG Proxy Generator</h1>
+  <textarea id="card-list" rows="10" cols="30" placeholder="Enter card names, one per line">Command Tower
+Sol Ring
+</textarea>
+  <br>
+  <button id="generate-proxies">Generate Proxies</button>
+  <div class="card-grid" id="card-grid"></div>
+
+  <!-- Debug Window -->
+  <h2>Debug Window</h2>
+  <textarea id="debug-window" rows="10" cols="50" readonly></textarea>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
