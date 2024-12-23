@@ -26,3 +26,7 @@ Titanoth Rex
 
 This will generate a PDF file that has the exact size of MTG card to print.
 
+## Development Notes
+
+- Use `Live Server` extension to debug easily.
+- Not sure how to add automated tests...
