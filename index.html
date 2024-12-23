@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MTG Proxy Generator with Debug Window</title>
+  <title>MTG Proxy Printer</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <h1>MTG Proxy Generator</h1>
-  <textarea id="card-list" rows="10" cols="30" placeholder="Enter card names, one per line">Command Tower
-Sol Ring
-</textarea>
-  <br>
-  <button id="generate-proxies">Generate Proxies</button>
-  <div class="card-grid" id="card-grid"></div>
-
-  <!-- Debug Window -->
-  <h2>Debug Window</h2>
-  <textarea id="debug-window" rows="10" cols="50" readonly></textarea>
-
+  <div class="controls">
+    <textarea id="card-list" placeholder="Enter card names, one per line">Sol Ring
+Command Tower
+    </textarea><br>
+    <button id="generate-proxies">Generate Proxies</button>
+    <button id="print-proxies">Print Proxies</button>
+  </div>
+  <div id="card-images">
+  </div>
+  <div class="controls">
+    <h2>Debug Window</h2>
+    <textarea id="debug-window" rows="10" cols="50" readonly></textarea>
+  </div>
   <script src="app.js"></script>
 </body>
-
 </html>
