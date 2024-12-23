@@ -89,6 +89,49 @@ footer {
   border-radius: 5px;
 }
 
+/* Style for <pre> */
+pre {
+  background-color: #f4f4f9; /* Light gray background */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 15px; /* Add padding for readability */
+  font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+  font-size: 14px; /* Comfortable font size */
+  line-height: 1.6; /* Good line spacing */
+  overflow-x: auto; /* Allow horizontal scrolling for long content */
+  color: #333; /* Dark gray text color */
+  width: 80%;
+  max-width: 600px;
+
+}
+
+/* Style for <p> */
+p {
+  font-family: 'Arial', sans-serif; /* Clean sans-serif font */
+  font-size: 16px; /* Comfortable font size */
+  line-height: 1.8; /* Relaxed line spacing */
+  color: #444; /* Dark gray text */
+  margin-bottom: 1.5em; /* Space between paragraphs */
+  width: 80%;
+  max-width: 600px;
+}
+
+/* Style for <ul> */
+ul {
+  font-family: 'Arial', sans-serif; /* Match the paragraph font */
+  font-size: 16px; /* Comfortable font size */
+  line-height: 1.8; /* Match paragraph line spacing */
+  color: #444; /* Dark gray text */
+  margin-left: 20px; /* Add indentation for the list */
+  margin-bottom: 1.5em; /* Space below the list */
+  width: 80%;
+  max-width: 600px;
+}
+
+ul li {
+  margin-bottom: 0.5em; /* Space between list items */
+}
+
 @media print {
   body {
     margin: 0;

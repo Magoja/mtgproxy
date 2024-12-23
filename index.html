@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MTG Proxy Printer</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="controls">
-    <textarea id="card-list" placeholder="Enter card names, one per line">Sol Ring
-Command Tower
+    <h1>MTG Proxy Printing Tool</h1>
+    <p>
+      (1) Find and select cards you want from <a href="https://edhrec.com">EDHREC</a>. (2) Export your selection as `CLIPBOARD`.
+      Eg)
+    <pre>Armasaur Guide
+Dazzling Angel
+Exemplar of Light
+Hinterland Sanctifier
+Leyline of Hope
+Qala, Ajani's Pridemate</pre>
+    (3) Paste it to the text area, and click `Generate Proxies`.
+    </p>
+    <textarea id="card-list" placeholder="Enter card names, one per line">
     </textarea><br>
     <button id="generate-proxies">Generate Proxies</button>
     <button id="print-proxies">Print Proxies</button>
@@ -22,4 +35,5 @@ Command Tower
   </div>
   <script src="app.js"></script>
 </body>
+
 </html>
