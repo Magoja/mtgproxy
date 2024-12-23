@@ -36,28 +36,35 @@ function createGrid() {
   return grid;
 }
 
-async function generateCardImages(cardList) {
+function getCardImageElementBlockAndClear() {
   const kCardImages = "card-images";
-
   const cardImages = document.getElementById(kCardImages);
-  const kCardsPerPage = 6;
-
-  let count = 0;
-  
   cardImages.innerHTML = ''; // Clear previous results
+  return cardImages;
+}
 
-  // <div class="card-grid" id="card-grid"></div>
+async function generateCardImages(cardList) {
+  const kCardsPerPage = 6;
+  
+  let cardImages = getCardImageElementBlockAndClear();
 
-  let grid = createGrid();
-  cardImages.appendChild(grid);
-  for (const cardName of cardList) {
+  function startNewGrid() {
+    let grid = createGrid();
+    cardImages.appendChild(grid);
+    return grid;
+  }
+
+  let grid = startNewGrid();
+
+  for (const [index, cardName] of cardList.entries()) {
     logDebug(`Fetching card: ${cardName}`);
 
-    if (count != 0 && count % kCardsPerPage == 0) {
-      grid = createGrid();
-      cardImages.appendChild(grid);
+    // Create a new grid for every kCardsPerPage cards
+    if (index > 0 && index % kCardsPerPage === 0) {
+      grid = startNewGrid();
     }
-    
+  
+    // Fetch the card image and add it to the current grid
     const imageUrl = await fetchCardImage(cardName);
     if (imageUrl) {
       logDebug(`- Successfully fetched image for: ${cardName}`);
@@ -65,8 +72,6 @@ async function generateCardImages(cardList) {
     } else {
       logDebug(`- Failed to fetch image for: ${cardName}`);
     }
-
-    count = count + 1;
   }
 }
 
@@ -77,6 +82,6 @@ document.getElementById('generate-proxies').addEventListener('click', async () =
 });
 
 document.getElementById('print-proxies').addEventListener('click', () => {
-  logDebug("Preparing print view...");
+  logDebug("# Preparing print view...");
   window.print();
 });
