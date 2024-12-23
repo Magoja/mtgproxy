@@ -100,9 +100,9 @@ pre {
   line-height: 1.6; /* Good line spacing */
   overflow-x: auto; /* Allow horizontal scrolling for long content */
   color: #333; /* Dark gray text color */
-  width: 80%;
   max-width: 600px;
-
+  margin: 20px auto; /* Center the block */
+  text-align: left; /* Keep the text inside left-aligned */
 }
 
 /* Style for <p> */
