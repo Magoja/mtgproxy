@@ -75,18 +75,18 @@ footer {
   display: grid;
   grid-template-columns: repeat(3, 63mm); /* 3 cards per row */
   grid-template-rows: repeat(2, 88mm);  /* 2 rows per page */
-  gap: 10mm; /* Space between cards */
+  gap: 0mm; /* Space between cards */
   justify-content: center;
   margin: 20mm auto; /* Control top and bottom margins */
-  width: calc(3 * 63mm + 2 * 10mm); /* Total width of 3 cards + gaps */
-  height: calc(2 * 88mm + 1 * 10mm); /* Total height of 2 rows + gaps */
+  width: calc(3 * 63mm + 2 * 0mm); /* Total width of 3 cards + gaps */
+  height: calc(2 * 88mm + 1 * 0mm); /* Total height of 2 rows + gaps */
 }
 
 .card-grid img {
   width: 63mm; /* Standard MTG card width */
   height: 88mm; /* Standard MTG card height */
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 0px solid #ddd;
+  border-radius: 0px;
 }
 
 /* Style for <pre> */
@@ -146,7 +146,6 @@ footer a:hover {
   }
 
   .card-grid {
-    margin: 20mm auto; /* Maintain spacing for print */
     page-break-after: always; /* Ensure each grid fits on one page */
   }
   
