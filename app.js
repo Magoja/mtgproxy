@@ -13,8 +13,12 @@ function createImageBox(name, url) {
   return imgElement;
 }
 
+function splitCardList(text) {
+  return text.split('\n').map(card => card.trim()).filter(Boolean);
+}
+
 function getCardList() {
-  return document.getElementById('card-list').value.split('\n').map(card => card.trim()).filter(Boolean);
+  return splitCardList(document.getElementById('card-list').value);
 }
 
 async function fetchCardImage(cardName) {
@@ -84,7 +88,35 @@ function unittest() {
   logDebug("## Unittest: Start");
 
   let testCoverages = {
-    "Test name": function() { /* do something here */ return true; },
+    "[Test name template]": function() { /* do something here */ return true; },
+    "Test splitCardList()": function() {
+      function compare(input, expectedOutput) {
+        let inputResult = JSON.stringify(input);
+        let expectedResult = JSON.stringify(expectedOutput);
+        if (inputResult != expectedResult) {
+          logDebug(`- Test failed: Expected ${expectedResult}, got ${inputResult}`);
+          return false;
+        }
+        return true;
+      }
+
+      if (!compare(splitCardList("Card1\nCard2\nCard3"), ["Card1", "Card2", "Card3"])) {
+        return false;
+      }
+      if (!compare(splitCardList(" Card1 \n Card2 \n Card3 "), ["Card1", "Card2", "Card3"])) {
+        return false;
+      }
+      if (!compare(splitCardList("Card1\n\nCard2\nCard3"), ["Card1", "Card2", "Card3"])) {
+        return false;
+      }
+      if (!compare(splitCardList(""), [])) {
+        return false;
+      }
+      if (!compare(splitCardList("   "), [])) {
+        return false;
+      }
+      return true;
+    }
   }
 
   function safeExecute(testName, testFunction) {
