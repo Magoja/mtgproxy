@@ -87,8 +87,6 @@ function unittest() {
     "Test name": function() { /* do something here */ return true; },
   }
 
-  let listFailedTests = [];
-
   function safeExecute(testName, testFunction) {
     try {
       if (!testFunction() ) {
@@ -101,6 +99,8 @@ function unittest() {
       return false;
     }
   }
+
+  let listFailedTests = [];
 
   for (const [testName, testFunction] of Object.entries(testCoverages)) {
     logDebug(`Running test: ${testName}`);
