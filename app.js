@@ -80,6 +80,45 @@ async function generateCardImages(cardList) {
   }
 }
 
+function unittest() {
+  logDebug("## Unittest: Start");
+
+  let testCoverages = {
+    "Test name": function() { /* do something here */ return true; },
+  }
+
+  let listFailedTests = [];
+
+  function safeExecute(testName, testFunction) {
+    try {
+      if (!testFunction() ) {
+        logDebug(`- Test "${testName}" failed.`);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      logDebug(`- Test "${testName}" encountered an error: ${error.message}`);
+      return false;
+    }
+  }
+
+  for (const [testName, testFunction] of Object.entries(testCoverages)) {
+    logDebug(`Running test: ${testName}`);
+    if (!safeExecute(testName, testFunction)) {
+      listFailedTests.push(testName);
+    }
+  }
+
+  if (listFailedTests.length > 0) {
+    logDebug("## Unittest: Failed tests:");
+    for (const failedTest of listFailedTests) {
+      logDebug(`- ${failedTest}`);
+    }
+  } else {
+    logDebug("## Unittest: All tests passed.");
+  }
+}
+
 document.getElementById('generate-proxies').addEventListener('click', async () => {
   logDebug("# Starting to generate proxies...");
   await generateCardImages(getCardList());
@@ -89,4 +128,10 @@ document.getElementById('generate-proxies').addEventListener('click', async () =
 document.getElementById('print-proxies').addEventListener('click', () => {
   logDebug("# Preparing print view...");
   window.print();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  unittest();
+
+  logDebug("# Tool is ready.");
 });
