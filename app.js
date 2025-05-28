@@ -6,11 +6,61 @@ function logDebug(message) {
   console.log(message);
 }
 
-function createImageBox(name, url) {
+function createImageBox(name, urls) {
+  const container = document.createElement('div');
+  container.classList.add('image-box');
+
+  // Create the main image element
   const imgElement = document.createElement('img');
-  imgElement.src = url;
+  imgElement.src = urls[0]; // Default to the first URL
   imgElement.alt = name;
-  return imgElement;
+  imgElement.classList.add('main-image');
+  container.appendChild(imgElement);
+
+  // Create the modal
+  const modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.style.display = 'none'; // Initially hidden
+
+  const modalContent = document.createElement('div');
+  modalContent.classList.add('modal-content');
+
+  // Add all images to the modal
+  urls.forEach((url) => {
+    const modalImg = document.createElement('img');
+    modalImg.src = url;
+    modalImg.alt = name;
+    modalImg.classList.add('modal-image');
+    modalImg.addEventListener('click', () => {
+      imgElement.src = url; // Update the main image
+      modal.style.display = 'none'; // Close the modal
+    });
+    modalContent.appendChild(modalImg);
+  });
+
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+
+  // Open modal when clicking the main image
+  imgElement.addEventListener('click', () => {
+    modal.style.display = 'block';
+  });
+
+  // Close modal when clicking outside the content
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+
+  // Close modal when pressing the Escape key
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.style.display === 'block') {
+      modal.style.display = 'none';
+    }
+  });
+
+  return container;
 }
 
 function splitCardList(text) {
@@ -20,7 +70,7 @@ function splitCardList(text) {
 function getCardList() {
   let cardListString = document.getElementById('card-list').value;
   if (cardListString.trim() === "") {
-    const debugCardList = "Armasaur Guide\nArmasaur Guide\nArmasaur Guide\nArmasaur Guide\nArmasaur Guide\nArmasaur Guide\n";
+    const debugCardList = "Necropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\n";
     logDebug("No card list provided. Use debug list.");
     cardListString = debugCardList;
   }
@@ -69,7 +119,7 @@ function getCardImageElementBlockAndClear() {
 }
 
 async function generateCardImages(cardList) {
-  const kCardsPerPage = 6;
+  const kCardsPerPage = 9;
 
   let cardImages = getCardImageElementBlockAndClear();
 
@@ -97,9 +147,8 @@ async function generateCardImages(cardList) {
     // Fetch the card image and add it to the current grid
     const imageUrls = await fetchCardImageFromScryfall(cardName);
     if (imageUrls.length > 0) {
-      const imageUrl = imageUrls[0]; // Use the first image URL
       logDebug(`- Successfully fetched image for: ${cardName}`);
-      grid.appendChild(createImageBox(cardName, imageUrl));
+      grid.appendChild(createImageBox(cardName, imageUrls));
     } else {
       logDebug(`- Failed to fetch image for: ${cardName}`);
     }

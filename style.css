@@ -46,7 +46,7 @@ button:hover {
 }
 
 .card-grid img:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* Footer styling */
@@ -74,12 +74,12 @@ footer {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(3, 63mm); /* 3 cards per row */
-  grid-template-rows: repeat(2, 88mm);  /* 2 rows per page */
+  grid-template-rows: repeat(3, 88mm);  /* 3 rows per page */
   gap: 0mm; /* Space between cards */
   justify-content: center;
-  margin: 20mm auto; /* Control top and bottom margins */
+  margin: 5mm auto; /* Control top and bottom margins */
   width: calc(3 * 63mm + 2 * 0mm); /* Total width of 3 cards + gaps */
-  height: calc(2 * 88mm + 1 * 0mm); /* Total height of 2 rows + gaps */
+  height: calc(3 * 88mm + 1 * 0mm); /* Total height of 3 rows + gaps */
 }
 
 .card-grid img {
@@ -136,9 +136,68 @@ footer a:hover {
   text-decoration: underline; /* Add underline on hover */
 }
 
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  width: 80%; /* Adjust width as needed */
+  height: 80%; /* Adjust height as needed */
+  overflow: auto; /* Add scroll if content overflows */
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.modal-image {
+  width: 100px;
+  height: auto;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.modal-image:hover {
+  border-color: #007bff;
+}
+
+.fancy-box {
+  background-color: #f9f9f9; /* Light gray background */
+  border: 2px solid #007bff; /* Blue border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 10px 15px; /* Add padding inside the box */
+  font-size: 16px; /* Comfortable font size */
+  font-weight: bold; /* Make the text bold */
+  color: #333; /* Dark gray text */
+  text-align: center; /* Center-align the text */
+  margin: 10px auto; /* Center the box horizontally */
+  max-width: 400px; /* Limit the width of the box */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
 @media print {
+  html {
+    margin: 0;
+    padding-top: 8mm;
+  }
+
   body {
     margin: 0;
+    padding: 0; /* Remove any padding */
   }
 
   .controls {
@@ -147,8 +206,22 @@ footer a:hover {
 
   .card-grid {
     page-break-after: always; /* Ensure each grid fits on one page */
+    margin: 0; /* Remove margins */
+    padding: 0; /* Remove padding */
+    width: 100%; /* Use full width of the page */
+    height: calc(3 * 88mm); /* 3 rows of cards, each 88mm tall */
+    display: grid;
+    grid-template-columns: repeat(3, 63mm); /* 3 cards per row */
+    grid-template-rows: repeat(3, 88mm); /* 3 rows per page */
+    gap: 0; /* No gaps between cards */
   }
-  
+
+  .card-grid img {
+    width: 63mm; /* Standard MTG card width */
+    height: 88mm; /* Standard MTG card height */
+    border: none; /* Remove borders for printing */
+  }
+
   footer {
     display: none; /* Hide controls when printing */
   }
