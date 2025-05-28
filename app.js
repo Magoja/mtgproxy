@@ -6,44 +6,50 @@ function logDebug(message) {
   console.log(message);
 }
 
-function createImageBox(name, urls) {
-  const container = document.createElement('div');
-  container.classList.add('image-box');
+function createPreviewModalImageBox(imgElement, name, url) {
+  const modalImg = document.createElement('img');
+  modalImg.src = url;
+  modalImg.alt = name;
+  modalImg.classList.add('modal-image');
+  return modalImg;
+}
 
-  // Create the main image element
-  const imgElement = document.createElement('img');
-  imgElement.src = urls[0]; // Default to the first URL
-  imgElement.alt = name;
-  imgElement.classList.add('main-image');
-  container.appendChild(imgElement);
-
-  // Create the modal
-  const modal = document.createElement('div');
-  modal.classList.add('modal');
-  modal.style.display = 'none'; // Initially hidden
-
+function createPreviewModalPopup(imgElement, name, urls) {
   const modalContent = document.createElement('div');
   modalContent.classList.add('modal-content');
 
   // Add all images to the modal
   urls.forEach((url) => {
-    const modalImg = document.createElement('img');
-    modalImg.src = url;
-    modalImg.alt = name;
-    modalImg.classList.add('modal-image');
+    const modalImg = createPreviewModalImageBox(imgElement, name, url);
+    modalContent.appendChild(modalImg);
     modalImg.addEventListener('click', () => {
       imgElement.src = url; // Update the main image
       modal.style.display = 'none'; // Close the modal
     });
-    modalContent.appendChild(modalImg);
   });
 
+  const modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.style.display = 'none'; // Initially hidden
   modal.appendChild(modalContent);
-  document.body.appendChild(modal);
 
-  // Open modal when clicking the main image
-  imgElement.addEventListener('click', () => {
-    modal.style.display = 'block';
+  return modal;
+}
+
+function createImageBoxForPrint(name, url) {
+  const imgElement = document.createElement('img');
+  imgElement.src = url;
+  imgElement.alt = name;
+  imgElement.classList.add('main-image');
+  return imgElement;
+}
+
+function attachPopupEventListeners(modal) {
+  // Close modal when pressing the Escape key
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.style.display === 'block') {
+      modal.style.display = 'none';
+    }
   });
 
   // Close modal when clicking outside the content
@@ -52,14 +58,22 @@ function createImageBox(name, urls) {
       modal.style.display = 'none';
     }
   });
+}
 
-  // Close modal when pressing the Escape key
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && modal.style.display === 'block') {
-      modal.style.display = 'none';
-    }
+function createImageBox(name, urls) {
+  const container = document.createElement('div');
+  container.classList.add('image-box');
+
+  // Create the main image element
+  const imgElement = createImageBoxForPrint(name, urls[0]);
+  imgElement.addEventListener('click', () => {
+    modal.style.display = 'block';
   });
+  container.appendChild(imgElement);
 
+  const modal = createPreviewModalPopup(imgElement, name, urls);
+  attachPopupEventListeners(modal);
+  document.body.appendChild(modal);
   return container;
 }
 
@@ -70,7 +84,7 @@ function splitCardList(text) {
 function getCardList() {
   let cardListString = document.getElementById('card-list').value;
   if (cardListString.trim() === "") {
-    const debugCardList = "Necropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\nNecropotence\n";
+    const debugCardList = "Necropotence\n".repeat(9);
     logDebug("No card list provided. Use debug list.");
     cardListString = debugCardList;
   }
