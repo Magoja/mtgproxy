@@ -81,12 +81,27 @@ function splitCardList(text) {
   return text.split('\n').map(card => card.trim()).filter(Boolean);
 }
 
-function getCardList() {
-  let cardListString = document.getElementById('card-list').value;
-  if (cardListString.trim() === "") {
-    const debugCardList = "Necropotence\n".repeat(9);
+function getUploadedImages() {
+  const fileInput = document.getElementById('custom-image-upload');
+  const files = Array.from(fileInput.files);
+  const imageFiles = files.filter(file => file.type.startsWith('image/'));
+  const imageObjects = imageFiles.map(file => ({
+    name: file.name,
+    urls: [URL.createObjectURL(file)] // Create a temporary URL for the file
+  }));
+
+  return imageObjects;
+}
+
+function getDebugCardList() {
+  return "Necropotence\n".repeat(9);
+}
+
+function getCardListFromText() {
+  let cardListString = document.getElementById('card-list').value.trim();
+  if (cardListString === "") {
     logDebug("No card list provided. Use debug list.");
-    cardListString = debugCardList;
+    cardListString = getDebugCardList();
   }
   return splitCardList(cardListString);
 }
@@ -132,12 +147,29 @@ function getCardImageElementBlockAndClear() {
   return cardImages;
 }
 
-async function generateCardImages(cardList) {
+async function resolveCardImages(cardList) {
+  let cardImages = [];
+
+  for (const [_, cardName] of cardList.entries()) {
+    logDebug(`Fetching card: ${cardName}`);
+    let imageUrls = await fetchCardImageFromScryfall(cardName);
+    if (imageUrls.length > 0) {
+      logDebug(`- Successfully fetched image for: ${cardName}`);
+      cardImages.push({ name: cardName, urls: imageUrls });
+    } else {
+      logDebug(`- Failed to fetch image for: ${cardName}`);
+    }
+  }
+
+  return cardImages;
+}
+
+async function generateCardImages(cardsInfo) {
   const kCardsPerPage = 9;
 
   let cardImages = getCardImageElementBlockAndClear();
 
-  if (cardList.length == 0) {
+  if (cardsInfo.length == 0) {
     logDebug(" - No card is selected. Abort");
     return;
   }
@@ -150,8 +182,9 @@ async function generateCardImages(cardList) {
 
   let grid = startNewGrid();
 
-  for (const [index, cardName] of cardList.entries()) {
-    logDebug(`Fetching card: ${cardName}`);
+  for (let index = 0; index < cardsInfo.length; ++index) {
+    const info = cardsInfo[index];
+    logDebug(`Fetching card: ${info.name}`);
 
     // Create a new grid for every kCardsPerPage cards
     if (index > 0 && index % kCardsPerPage === 0) {
@@ -159,13 +192,7 @@ async function generateCardImages(cardList) {
     }
 
     // Fetch the card image and add it to the current grid
-    const imageUrls = await fetchCardImageFromScryfall(cardName);
-    if (imageUrls.length > 0) {
-      logDebug(`- Successfully fetched image for: ${cardName}`);
-      grid.appendChild(createImageBox(cardName, imageUrls));
-    } else {
-      logDebug(`- Failed to fetch image for: ${cardName}`);
-    }
+    grid.appendChild(createImageBox(info.name, info.urls));
   }
 }
 
@@ -238,7 +265,8 @@ function unittest() {
 
 document.getElementById('generate-proxies').addEventListener('click', async () => {
   logDebug("# Starting to generate proxies...");
-  await generateCardImages(getCardList());
+  let cardInfos = [...await resolveCardImages(getCardListFromText()), ...getUploadedImages()];
+  await generateCardImages(cardInfos);
   logDebug("# Finished generating proxies.");
 });
 
