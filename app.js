@@ -18,19 +18,40 @@ function splitCardList(text) {
 }
 
 function getCardList() {
-  return splitCardList(document.getElementById('card-list').value);
+  let cardListString = document.getElementById('card-list').value;
+  if (cardListString.trim() === "") {
+    const debugCardList = "Armasaur Guide\nArmasaur Guide\nArmasaur Guide\nArmasaur Guide\nArmasaur Guide\nArmasaur Guide\n";
+    logDebug("No card list provided. Use debug list.");
+    cardListString = debugCardList;
+  }
+  return splitCardList(cardListString);
 }
 
-async function fetchCardImage(cardName) {
-  try {
-    const response = await fetch(`https://api.scryfall.com/cards/named?exact=${encodeURIComponent(cardName)}`);
-    if (!response.ok) throw new Error(`Error fetching card: ${response.statusText}`);
-    const cardData = await response.json();
-    return cardData.image_uris.normal;
-  } catch (error) {
-    logDebug(`Error fetching card "${cardName}": ${error.message}`);
-    return null;
+function getListOfCardImageOnly(cardList) {
+  let listOfCardImages = [];
+  for (const card of cardList) {
+    if (card.image_uris && card.image_uris.normal) {
+      listOfCardImages.push(card.image_uris.normal);
+    } else {
+      logDebug(`No image found for card: ${card.name}`);
+    }
   }
+  return listOfCardImages;
+}
+
+async function fetchCardImageFromScryfall(cardName) {
+  // Document: https://scryfall.com/docs/api/cards/search
+  // Example: https://api.scryfall.com/cards/search?q=!%22Necropotence%22&pretty=true&unique=art
+  let escapedCardNameExactMatch = encodeURIComponent("!\"" + cardName + "\"");
+  const response = await fetch(`https://api.scryfall.com/cards/search?&unique=art&q=${escapedCardNameExactMatch}`);
+  if (!response.ok) {
+    throw new Error(`Error fetching card: ${response.statusText}`);
+  }
+
+  const cardData = await response.json();
+  let imageLists = getListOfCardImageOnly(cardData.data);
+  logDebug(`Fetched card data for "${cardName}": ${JSON.stringify(imageLists)}`);
+  return imageLists;
 }
 
 function createGrid() {
@@ -49,7 +70,7 @@ function getCardImageElementBlockAndClear() {
 
 async function generateCardImages(cardList) {
   const kCardsPerPage = 6;
-  
+
   let cardImages = getCardImageElementBlockAndClear();
 
   if (cardList.length == 0) {
@@ -72,10 +93,11 @@ async function generateCardImages(cardList) {
     if (index > 0 && index % kCardsPerPage === 0) {
       grid = startNewGrid();
     }
-  
+
     // Fetch the card image and add it to the current grid
-    const imageUrl = await fetchCardImage(cardName);
-    if (imageUrl) {
+    const imageUrls = await fetchCardImageFromScryfall(cardName);
+    if (imageUrls.length > 0) {
+      const imageUrl = imageUrls[0]; // Use the first image URL
       logDebug(`- Successfully fetched image for: ${cardName}`);
       grid.appendChild(createImageBox(cardName, imageUrl));
     } else {
@@ -88,8 +110,8 @@ function unittest() {
   logDebug("## Unittest: Start");
 
   let testCoverages = {
-    "[Test name template]": function() { /* do something here */ return true; },
-    "Test splitCardList()": function() {
+    "[Test name template]": function () { /* do something here */ return true; },
+    "Test splitCardList()": function () {
       function compare(input, expectedOutput) {
         let inputResult = JSON.stringify(input);
         let expectedResult = JSON.stringify(expectedOutput);
@@ -121,7 +143,7 @@ function unittest() {
 
   function safeExecute(testName, testFunction) {
     try {
-      if (!testFunction() ) {
+      if (!testFunction()) {
         logDebug(`- Test "${testName}" failed.`);
         return false;
       }
