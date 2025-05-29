@@ -140,7 +140,7 @@ function createGrid() {
   return grid;
 }
 
-function getCardImageElementBlockAndClear() {
+function getCardImageElementBlock() {
   const kCardImages = "card-images";
   const cardImages = document.getElementById(kCardImages);
   cardImages.innerHTML = ''; // Clear previous results
@@ -167,33 +167,30 @@ async function resolveCardImages(cardList) {
 async function generateCardImages(cardsInfo) {
   const kCardsPerPage = 9;
 
-  let cardImages = getCardImageElementBlockAndClear();
+  let cardImages = getCardImageElementBlock();
 
   if (cardsInfo.length == 0) {
     logDebug(" - No card is selected. Abort");
     return;
   }
 
-  function startNewGrid() {
-    let grid = createGrid();
-    cardImages.appendChild(grid);
-    return grid;
-  }
-
-  let grid = startNewGrid();
-
   for (let index = 0; index < cardsInfo.length; ++index) {
     const info = cardsInfo[index];
     logDebug(`Fetching card: ${info.name}`);
 
-    // Create a new grid for every kCardsPerPage cards
-    if (index > 0 && index % kCardsPerPage === 0) {
-      grid = startNewGrid();
-    }
-
     // Fetch the card image and add it to the current grid
-    grid.appendChild(createImageBox(info.name, info.urls));
+    cardImages.appendChild(createImageBox(info.name, info.urls));
   }
+}
+
+function addCardBackToPrintLayout() {
+  const cardImagesContainer = document.getElementById('card-images');
+
+  // Append the card back image to the container
+  cardImagesContainer.appendChild(
+    createImageBox('Magic Card Back', ['Magic_card_back.webp']));
+
+  logDebug('Added a card back to the print layout.');
 }
 
 function unittest() {
@@ -279,4 +276,8 @@ document.addEventListener('DOMContentLoaded', () => {
   unittest();
 
   logDebug("# Tool is ready.");
+});
+
+document.getElementById('add-card-back').addEventListener('click', () => {
+  addCardBackToPrintLayout();
 });
