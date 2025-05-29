@@ -140,7 +140,7 @@ function createGrid() {
   return grid;
 }
 
-function getCardImageElementBlock() {
+function getCardImageBlockWithCleanup() {
   const kCardImages = "card-images";
   const cardImages = document.getElementById(kCardImages);
   cardImages.innerHTML = ''; // Clear previous results
@@ -167,19 +167,27 @@ async function resolveCardImages(cardList) {
 async function generateCardImages(cardsInfo) {
   const kCardsPerPage = 9;
 
-  let cardImages = getCardImageElementBlock();
+  let cardImages = getCardImageBlockWithCleanup();
 
   if (cardsInfo.length == 0) {
     logDebug(" - No card is selected. Abort");
     return;
   }
 
+  let currentGrid = createGrid();
+  cardImages.appendChild(currentGrid);
+
   for (let index = 0; index < cardsInfo.length; ++index) {
+    if (index % kCardsPerPage == 0 && index > 0) {
+      // If we reached the end of the page, create a new grid
+      currentGrid = createGrid();
+      cardImages.appendChild(currentGrid);
+    }
+
     const info = cardsInfo[index];
     logDebug(`Fetching card: ${info.name}`);
-
-    // Fetch the card image and add it to the current grid
-    cardImages.appendChild(createImageBox(info.name, info.urls));
+    
+    currentGrid.appendChild(createImageBox(info.name, info.urls));
   }
 }
 

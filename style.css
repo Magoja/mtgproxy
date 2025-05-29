@@ -205,15 +205,15 @@ footer a:hover {
   }
 
   .card-grid {
-    page-break-after: always; /* Ensure each grid fits on one page */
-    margin: 0; /* Remove margins */
-    padding: 0; /* Remove padding */
-    width: 100%; /* Use full width of the page */
-    height: calc(3 * 88mm); /* 3 rows of cards, each 88mm tall */
     display: grid;
+    gap: 0; /* No gaps between cards */
     grid-template-columns: repeat(3, 63mm); /* 3 cards per row */
     grid-template-rows: repeat(3, 88mm); /* 3 rows per page */
-    gap: 0; /* No gaps between cards */
+    height: calc(3 * 88mm); /* 3 rows of cards, each 88mm tall */
+    margin: 0; /* Remove margins */
+    padding: 0; /* Remove padding */
+    page-break-after: avoid; /* Ensure each grid fits on one page */
+    width: 100%; /* Use full width of the page */
   }
 
   .card-grid img {
