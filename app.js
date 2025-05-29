@@ -183,16 +183,6 @@ async function generateCardImages(cardsInfo) {
   }
 }
 
-function addCardBackToPrintLayout() {
-  const cardImagesContainer = document.getElementById('card-images');
-
-  // Append the card back image to the container
-  cardImagesContainer.appendChild(
-    createImageBox('Magic Card Back', ['Magic_card_back.webp']));
-
-  logDebug('Added a card back to the print layout.');
-}
-
 function unittest() {
   logDebug("## Unittest: Start");
 
@@ -276,8 +266,4 @@ document.addEventListener('DOMContentLoaded', () => {
   unittest();
 
   logDebug("# Tool is ready.");
-});
-
-document.getElementById('add-card-back').addEventListener('click', () => {
-  addCardBackToPrintLayout();
 });
